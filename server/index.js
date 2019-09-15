@@ -1,25 +1,29 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const cookieSession = require("cookie-session");
-const passport = require("passport");
-const keys = require("./config/keys");
-require("./models/User");
-require("./services/passport");
-
-mongoose.connect(keys.mongoURI);
+const bodyParser = require('body-parser');
+const path = require("path")
+const cors = require('cors')
+const logger = require('morgan')
+const helmet = require('helmet')
 
 const app = express();
+app.use(cors())
+app.use(helmet())
+app.use(logger('tiny'))
+app.use(bodyParser.json())
 
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [keys.cookieKey]
+const youtube = require('./routes/youtube')
+app.use('/api/youtube', youtube)
+
+const translate = require('./routes/translate')
+app.use("/api/translate", translate)
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'))
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
   })
-);
-app.use(passport.initialize());
-app.use(passport.session());
+}
 
-require("./routes/authRoutes")(app);
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT);

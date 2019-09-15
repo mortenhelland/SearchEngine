@@ -1,7 +1,13 @@
 import React from "react";
+import {languages} from "../apis"
 
 class SearchBar extends React.Component {
-state = { term: ''};
+    state = { term: '', lang: [] };
+
+    componentDidMount = async () => {
+      const lang = await languages();
+      this.setState({lang})
+    }
 
     onInputChange= (event) => {
         this.setState({term: event.target.value});
@@ -9,7 +15,6 @@ state = { term: ''};
 
     onFormSubmit = (event) => {
         event.preventDefault();
-
         this.props.onFormSubmit(this.state.term);        
     };
 
@@ -19,7 +24,15 @@ state = { term: ''};
         <form onSubmit= {this.onFormSubmit} className="ui form">
           <div className="field">
             <label>Video Search</label>
-            <a href="http://localhost:5000/auth/google"> Sign in with Google</a>
+            <select onChange = {this.props.handleSelect}>
+              {this.state.lang.map(l => {
+                if(l.code === 'en') {
+                  return <option key={l.code} value={l.code} selected>{l.name}</option>
+                } else {
+                  return <option key={l.code} value={l.code}>{l.name}</option>
+                }
+              })}
+            </select>
             <input 
             type="text" 
             value = {this.state.term}

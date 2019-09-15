@@ -1,23 +1,24 @@
 import React from "react";
+import Description from './Description'
 
-const VideoDetail = ({ video }) => {
-  if (!video) {
-    return <div>Loading...</div>;
-  }
-
-  const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}`
-
-  return (
-    <div>
-        <div className ="ui embed">
-            <iframe title ="video player"src={videoSrc} />
-        </div>
-      <div className= "ui segment">
-      <h4 className="ui header">{video.snippet.title}</h4>
-      <p>{video.snippet.description}</p>
-      </div>
-    </div>
-  );
-};
+const VideoDetail = ({video, language, text}) => {
+    return (
+      <>
+        {video ? (
+          <div>
+            <div className="ui embed">
+              <iframe title="video player" src={`https://www.youtube.com/embed/${video.id.videoId}`} />
+            </div>
+            <div className="ui segment">
+              <h4 className="ui header">{video.snippet.title}</h4>
+              <Description text={video.snippet.description} language={language} />
+            </div>
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+      </>
+    );
+}
 
 export default VideoDetail;

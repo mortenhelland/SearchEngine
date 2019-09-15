@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm install --prefix client
+RUN npm run build
 
 CMD [ "npm", "run", "dev" ]
 
