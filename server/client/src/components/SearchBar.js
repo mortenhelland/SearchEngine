@@ -2,7 +2,7 @@ import React from "react";
 import {languages} from "../apis"
 
 class SearchBar extends React.Component {
-    state = { term: '', lang: [] };
+    state = { term: '', lang: []};
 
     componentDidMount = async () => {
       const lang = await languages();
